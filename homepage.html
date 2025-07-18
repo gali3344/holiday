@@ -9,14 +9,14 @@ async function fetchRSS() {
   const parser = new DOMParser();
   const xml = parser.parseFromString(data.contents, "application/xml");
   const items = xml.querySelectorAll("item");
-  let html = '<ul>';
+  let html = '<ul class="list-group">';
   items.forEach((item, idx) => {
     if (idx >= 10) return;
     const title = item.querySelector("title").textContent;
     const link = item.querySelector("link").textContent;
     const source = item.querySelector("source").textContent;
-    const pubDate = new Date(item.querySelector("pubDate").textContent).toLocaleDateString();
-    html += `<li><a href="${link}" target="_blank">[${source}] ${title}</a> <small>${pubDate}</small></li>`;
+    const pubDate = new Date(item.querySelector("pubDate").textContent).toLocaleString();
+    html += `<li class="list-group-item"><a href="${link}" target="_blank">[${source}] ${title}</a> <small>${pubDate}</small></li>`;
   });
   html += '</ul>';
   document.getElementById('news').innerHTML = html;
