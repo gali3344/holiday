@@ -2,30 +2,42 @@
 <div id="news"></div>
 <script>
 async function fetchNews() {
-  const res = await fetch('https://tw.news.yahoo.com/rss');
-  const text = await res.text();
-  const parser = new window.DOMParser();
-  const xml = parser.parseFromString(text, "application/xml");
-  const items = xml.querySelectorAll('item');
+  const feeds = [
+    { name: '中央社', url: 'https://www.cna.com.tw/rss.aspx' },
+    { name: '自由時報', url: 'https://news.ltn.com.tw/rss' },
+    { name: '聯合報', url: 'https://udn.com/rssfeed' },
+    { name: 'ETtoday', url: 'https://www.ettoday.net/events/news-express/feeds.rss' },
+    { name: 'Yahoo奇摩新聞', url: 'https://tw.news.yahoo.com/rss' }
+  ];
   const newsDiv = document.getElementById('news');
-  if (items.length > 0) {
-    let html = '<h2>最新台灣新聞</h2><ul class="list-group">';
-    items.forEach((item, idx) => {
-      if (idx < 3) {
-        const title = item.querySelector('title')?.textContent || '';
-        const link = item.querySelector('link')?.textContent || '#';
-        const pubDate = item.querySelector('pubDate')?.textContent?.substring(0, 16) || '';
-        html += `<li class="list-group-item">
-          <a href="${link}" target="_blank">${title}</a>
-          <div class="text-muted small">${pubDate}</div>
-        </li>`;
-      }
-    });
-    html += '</ul>';
-    newsDiv.innerHTML = html;
-  } else {
-    newsDiv.innerHTML = '無法取得新聞資訊。';
+  let html = '<h2>最新台灣新聞</h2>';
+  for (const feed of feeds) {
+    try {
+      const res = await fetch(feed.url);
+      const text = await res.text();
+      const parser = new window.DOMParser();
+      const xml = parser.parseFromString(text, "application/xml");
+      const items = xml.querySelectorAll('item');
+      html += `<h3>${feed.name}</h3><ul class="list-group">`;
+      let count = 0;
+      items.forEach((item) => {
+        if (count < 5) {
+          const title = item.querySelector('title')?.textContent || '';
+          const link = item.querySelector('link')?.textContent || '#';
+          const pubDate = item.querySelector('pubDate')?.textContent?.substring(0, 16) || '';
+          html += `<li class="list-group-item">
+            <a href="${link}" target="_blank">${title}</a>
+            <div class="text-muted small">${pubDate}</div>
+          </li>`;
+          count++;
+        }
+      });
+      html += '</ul>';
+    } catch (e) {
+      html += `<div>${feed.name} 無法取得新聞資訊。</div>`;
+    }
   }
+  newsDiv.innerHTML = html;
 }
 fetchNews();
 </script>
