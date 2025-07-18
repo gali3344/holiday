@@ -6,10 +6,11 @@
 </head>
 <body class="pt-5">
   <div id="header"></div>
-  <div id="main" class="container-fluid mt-2 mb-2"></div>
+  <div id="main" class="container-fluid mt-3 mb-3"></div>
   <div id="footer"></div>
   <script>
     async function loadPart(id, url) {
+      document.getElementById(id).innerHTML = 'Loading...';
       const res = await fetch(url);
       document.getElementById(id).innerHTML = await res.text();
     }
