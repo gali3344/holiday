@@ -1,22 +1,23 @@
 <H1>歡迎來到 HOLIDAY</H1>
 <div id="news"></div>
 <script>
-fetch('https://news.google.com/rss/search?q=台灣+財經&hl=zh-TW&gl=TW&ceid=TW:zh-Hant')
-  .then(response => response.text())
-  .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
-  .then(data => {
-    const items = data.querySelectorAll("item");
-    let html = "<ul>";
-    items.forEach(item => {
-      const title = item.querySelector("title").textContent;
-      const link = item.querySelector("link").textContent;
-      html += `<li><a href="${link}" target="_blank">${title}</a></li>`;
-    });
-    html += "</ul>";
-    document.getElementById("news").innerHTML = html;
-  })
-  .catch(err => {
-    document.getElementById("news").innerText = "無法取得RSS";
+async function fetchRSS() {
+  const proxy = 'https://api.allorigins.win/get?url=';
+  const rssUrl = encodeURIComponent('https://news.google.com/rss/search?q=台灣+財經&hl=zh-TW&gl=TW&ceid=TW:zh-Hant');
+  const response = await fetch(proxy + rssUrl);
+  const data = await response.json();
+  const parser = new DOMParser();
+  const xml = parser.parseFromString(data.contents, "application/xml");
+  const items = xml.querySelectorAll("item");
+  let html = '<ul>';
+  items.forEach((item, idx) => {
+    if (idx >= 5) return; // 只顯示前5則
+    const title = item.querySelector("title").textContent;
+    const link = item.querySelector("link").textContent;
+    html += `<li><a href="${link}" target="_blank">${title}</a></li>`;
   });
-</script>
+  html += '</ul>';
+  document.getElementById('news').innerHTML = html;
+}
+fetchRSS();
 </script>
