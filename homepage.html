@@ -14,11 +14,10 @@ async function fetchRSS() {
     if (idx >= 10) return;
     const title = item.querySelector("title").textContent;
     const link = item.querySelector("link").textContent;
-    const source = item.querySelector("source").textContent;
     const pubDate = new Date(item.querySelector("pubDate").textContent).toLocaleString();
     html += `<a href="${link}" target="_blank" class="list-group-item list-group-item-action flex-column align-items-start">`;
     html += `<div class="d-flex w-100 justify-content-between align-items-end">`;
-    html += `<h5 class="mb-1">${title}<small>${source}</small></h5>`;
+    html += `<h5 class="mb-1">${title}<br />&nbsp;</h5>`;
     html += `<small class="text-muted" style="align-self: flex-end;">${pubDate}</small>`;
     html += `</div>`;
     html += `</a>`;
