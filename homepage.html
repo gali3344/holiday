@@ -1,31 +1,21 @@
 <H1>歡迎來到 HOLIDAY</H1>
 <div id="news"></div>
 <script>
-async function fetchNews() {
-  const res = await fetch('https://tw.news.yahoo.com/rss');
-  const text = await res.text();
-  const parser = new window.DOMParser();
-  const xml = parser.parseFromString(text, "application/xml");
-  const items = xml.querySelectorAll('item');
-  const newsDiv = document.getElementById('news');
-  if (items.length > 0) {
-    let html = '<h2>最新台灣新聞</h2><ul class="list-group">';
-    items.forEach((item, idx) => {
-      if (idx < 3) {
-        const title = item.querySelector('title')?.textContent || '';
-        const link = item.querySelector('link')?.textContent || '#';
-        const pubDate = item.querySelector('pubDate')?.textContent?.substring(0, 16) || '';
-        html += `<li class="list-group-item">
-          <a href="${link}" target="_blank">${title}</a>
-          <div class="text-muted small">${pubDate}</div>
-        </li>`;
-      }
+fetch('https://corsproxy.io/?https://news.ltn.com.tw/rss/business.xml')
+  .then(response => response.text())
+  .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
+  .then(data => {
+    const items = data.querySelectorAll("item");
+    let html = "<ul>";
+    items.forEach(item => {
+      const title = item.querySelector("title").textContent;
+      const link = item.querySelector("link").textContent;
+      html += `<li><a href="${link}" target="_blank">${title}</a></li>`;
     });
-    html += '</ul>';
-    newsDiv.innerHTML = html;
-  } else {
-    newsDiv.innerHTML = '無法取得新聞資訊。';
-  }
-}
-fetchNews();
+    html += "</ul>";
+    document.getElementById("news").innerHTML = html;
+  })
+  .catch(err => {
+    document.getElementById("news").innerText = "無法取得最新商業新聞資訊";
+  });
 </script>
