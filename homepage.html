@@ -11,10 +11,12 @@ async function fetchRSS() {
   const items = xml.querySelectorAll("item");
   let html = '<ul>';
   items.forEach((item, idx) => {
-    if (idx >= 5) return; // 只顯示前5則
+    if (idx >= 10) return;
     const title = item.querySelector("title").textContent;
     const link = item.querySelector("link").textContent;
-    html += `<li><a href="${link}" target="_blank">${title}</a></li>`;
+    const source = item.querySelector("source").textContent;
+    const pubDate = new Date(item.querySelector("pubDate").textContent).toLocaleDateString();
+    html += `<li><a href="${link}" target="_blank">[${source}] ${title}</a> <small>${pubDate}</small></li>`;
   });
   html += '</ul>';
   document.getElementById('news').innerHTML = html;
