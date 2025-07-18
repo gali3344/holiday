@@ -15,8 +15,16 @@ async function fetchRSS() {
     const title = item.querySelector("title").textContent;
     const link = item.querySelector("link").textContent;
     const source = item.querySelector("source").textContent;
+    const description = item.querySelector("description").textContent;
     const pubDate = new Date(item.querySelector("pubDate").textContent).toLocaleString();
-    html += `<li class="list-group-item"><a href="${link}" target="_blank">[${source}] ${title}</a> <small>${pubDate}</small></li>`;
+    html += `<a href="${link}" target="_blank" class="list-group-item list-group-item-action flex-column align-items-start">`;
+    html += `<div class="d-flex w-100 justify-content-between">`;
+    html += `<h5 class="mb-1">${title}</h5>`;
+    html += `<small class="text-muted">${pubDate}</small>`;
+    html += `</div>`;
+    html += `<p class="mb-1">${description}</p>`;
+    html += `<small class="text-muted">${pubDate}</small>`;
+    html += `</a>`;
   });
   html += '</ul>';
   document.getElementById('news').innerHTML = html;
