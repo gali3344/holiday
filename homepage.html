@@ -1,7 +1,7 @@
 <H1>歡迎來到 HOLIDAY</H1>
 <div id="news"></div>
 <script>
-fetch('https://corsproxy.io/?https://news.ltn.com.tw/rss/business.xml')
+fetch('https://corsproxy.io/?https://news.google.com/rss/search?q=台灣+財經&hl=zh-TW&gl=TW&ceid=TW:zh-Hant')
   .then(response => response.text())
   .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
   .then(data => {
@@ -18,4 +18,5 @@ fetch('https://corsproxy.io/?https://news.ltn.com.tw/rss/business.xml')
   .catch(err => {
     document.getElementById("news").innerText = "無法取得最新商業新聞資訊";
   });
+</script>
 </script>
